@@ -2,7 +2,7 @@
 #Best School loop
 
 x=1
-while [$x -lt 10]
+while [$x -le 10]
 do
 	echo "Best School"
 	((x++))
