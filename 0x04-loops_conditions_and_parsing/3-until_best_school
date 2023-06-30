@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#A bash script that prints Best School 10 times using until
+w=0
+until (("$w" == 10))
+do
+	echo "Best School"
+	((w++))
+done
