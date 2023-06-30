@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-#Best School loop
-
-x=1
-while [$x -le 10]
+#Printing Best School 10 times using while loop
+k=0
+while((k < 10))
 do
 	echo "Best School"
-	((x++))
+	((k++))
 done
