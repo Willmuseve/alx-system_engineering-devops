@@ -3,7 +3,7 @@
 # displays bad luck for the 4rth loop iteration
 #displays good luck for the 8th loop iteration
 #displays Best School for the other iterations
-k=0
+k=1
 while (("$k" < 10))
 do
 	if [ "$k" == 4 ]
