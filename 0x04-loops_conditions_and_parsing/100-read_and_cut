@@ -1,4 +1,4 @@
-#!/usr/bin/bash env
+#!/usr/bin/env bash
 #a Bash script that displays the content of the file /etc/passwd
 #the script only displays username, user, id, Home directory path for the user
 k=0
