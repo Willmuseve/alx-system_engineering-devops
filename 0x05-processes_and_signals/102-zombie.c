@@ -3,8 +3,8 @@
 #include <unistd.h>
 
 /**
- * A program that returns five zombie processes
- * for every zombie process created, it displays Zombie process created, PID: ZPMBIE_PID
+ * infinite_while - a function that creates an infinite loop
+ * Return: 0
  */
 int infinite_while(void)
 {
