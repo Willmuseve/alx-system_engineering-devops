@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#Best School loop
+x="0"
+while [$x -lt 10]
+do
+	echo "Best School"
+	x=$((x+1))
+done
