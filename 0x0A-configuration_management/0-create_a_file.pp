@@ -1,3 +1,5 @@
+# new file
+
 file { '/tmp/school':
   ensure  => 'admin',
   content => 'I love Puppet',
