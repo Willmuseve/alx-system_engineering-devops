@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-# connecting to the server
-service apache2 status
-service apache2 start
