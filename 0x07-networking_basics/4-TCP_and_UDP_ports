@@ -1,6 +1,5 @@
 #!/bin/bash
-
+# Bash script that displays listening ports:
 # - That only shows listening sockets.
 # - That shows the PID and name of the program
-
-sudo netstat -tuln -p | grep
+netstat -listening --program
