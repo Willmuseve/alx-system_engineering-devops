@@ -2,23 +2,24 @@
 #This script configures server-2
 
 # Updating packages and installing nginx
-sudo apt update -y
-sudo apt install nginx -y
+sudo apt-get update
+sudo apt-get install nginx -y
 
-# Changing owner to current user
-sudo chown -R "$USER":"$USER" /var/www/html/
-sudo chown -R "$USER":"$USER" /etc/nginx/sites-available/
+# create a hello world page
+echo "Hello World!" | sudo tee /var/www/html/index.html
 
-# Configuring output
-sudo echo "Hello World!" | sudo tee /var/www/html/index.html
-echo "Ceci n'est pas une page" | sudo tee /usr/share/nginx/html/custom_404.html
+# create a redirection for our website
+sudo sed -i '/server_name _;/a \	location /redirect_me {\n		return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;\n	}' /etc/nginx/sites-available/default
 
-# Update c
-sed -i "/server_name _;/ a\\\trewrite ^/redirect_me https://www.kevinkoech.tech permanent;" /etc/nginx/sites-available/default
-sed -i "/server_name _;/ a\\\terror_page 404 /custom_404.html;" /etc/nginx/sites-available/default
 
-# Configure header
-sed -i "/server_name _;/ a\\\tadd_header X-Served-By $HOSTNAME;" /etc/nginx/sites-available/default
+# Create a custom 404 page
+echo "Ceci n'est pas une page" | sudo tee /var/www/html/custom_404.html
 
-# Start engine
+# Configure Nginx to use the custom 404 page
+sudo sed -i '/server_name _;/a \        error_page 404 /custom_404.html;\n        location = /custom_404.html {\n                internal;\n        }' /etc/nginx/sites-available/default
+
+# Add custom header configuration to Nginx
+sudo sed -i "/^http {/a \    add_header X-Served-By $hostname;" /etc/nginx/nginx.conf
+
+# restart the web server after updating the settings
 sudo service nginx restart
