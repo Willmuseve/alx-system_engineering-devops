@@ -1,34 +1,17 @@
 #!/usr/bin/env bash
+# this script displays contents about given subdomains
 
-# Function to display information about a subdomain
-display_info() {
-  local domain="$1"
-  local subdomain="$2"
-  local record_type
-  local destination
-  
-  # Use dig command to query Records
-  record_type=$(dig +short -t CNAME "$subdomain.$domain" | awk '{if ($0) print "CNAME"; else print "A"}')
-  destination=$(dig +short "$subdomain.$domain")
-
-  echo "The subdomain $subdomain is a $record_type record and points to $destination"
+display_info ()
+{
+    domain="$1"
+    subdomain="$2"
+    dig "$subdomain.$domain" | awk '/ANSWER SECTION:/{getline; printf "The subdomain %s is a %s record and points to %s\n", var, $4, $5}' var="$subdomain"
 }
 
-if [ "$#" -lt 1 ]; then
-  echo "Usage: $0 domain [subdomain]"
-  exit 1
-fi
-
-domain="$1"
-
-# Check subdomain provision
-if [ "$#" -eq 2 ]; then
-  subdomain="$2"
-  display_info "$domain" "$subdomain"
-else
-  # Display information for default subdomains in the specified order
-  display_info "$domain" "www"
-  display_info "$domain" "lb-01"
-  display_info "$domain" "web-01"
-  display_info "$domain" "web-02"
-fi
+for subdomain in "www" "lb-01" "web-01" "web-02"
+do
+    if [ -z "$2" ] || [ "$2" == "$subdomain" ] ;
+    then
+	display_info "$1" "$subdomain"
+    fi
+done
