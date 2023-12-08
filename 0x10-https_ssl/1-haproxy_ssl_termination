@@ -1,47 +1,31 @@
+# Global configuration section
 global
-    log 127.0.0.1 local0 notice
-    maxconn 2000
-    user haproxy
-    group haproxy
+    daemon                 # will run HAProxy as a daemon process
+    maxconn 2048           # Maximum concurrent connections HAProxy will accept
+    tune.ssl.default-dh-param 2048 # Size of Diffie-Hellman parameter for SSL
+
+# Default configuration for all frontends and backends
 defaults
-    log     global
-    mode    http
-    option  forwardfor
-    option  http-server-close
-    retries 3
-    option redispatch
-    timeout connect  5000
-    timeout client  10000
-    timeout server  10000
-listen hbnb
-    bind 0.0.0.0:443
-    mode http
-    stats enable
-    stats uri /haproxy?stats
-    balance roundrobin
-    option httpclose
-    option forwardfor
-    server 20205-web-01 54.85.94.236:80 check
-    server 20205-web-02 100.26.172.139:80 check
-    option  forwardfor
-    option  http-server-close
+    mode http                      # Default mode is HTTP
+    timeout connect 5000ms         # Connection timeout to backend servers
+    timeout client 50000ms         # Timeout for client-side connections
+    timeout server 50000ms         # Timeout for server-side connections
+    option forwardfor              # Enable insertion of For header
+    option http-server-close       # Closes the backend server after request
 
-frontend www-http
-    bind   3.236.20.125:80
-    reqadd X-Forwarded-Proto:\ http
-    default_backend www-backend
+# Frontend for HTTP traffic
+frontend http_front
+    bind *:80                      # Bind to port 80 for HTTP traffic
+    default_backend http_back      # Route incoming HTTP traffic to backend
 
+# Frontend for HTTPS traffic
 frontend www-https
-    bind   3.236.20.125:443 ssl crt /etc/haproxy/certs/www.willmusev.tech.pem
-    reqadd X-Forwarded-Proto:\ https
-    acl letsencrypt-acl path_beg /.well-known/acme-challenge/
-    use_backend letsencrypt-backend if letsencrypt-acl
-    default_backend www-backend
+    bind *:443 ssl crt /etc/haproxy/certs/www.willmuseve.tech.pem  # Bind to port 443 for HTTPS traffic and specify SSL certificate
+    default_backend http_back      # Route incoming HTTPS traffic to backend
 
-backend www-backend
-   redirect scheme https if !{ ssl_fc }
-   server web-01 34.229.137.94:80 check
-   server web-02 100.26.246.233:80 check
-
-backend letsencrypt-backend
-   server letsencrypt 127.0.0.1:54321
+# Backend configuration
+backend http_back
+    redirect scheme https if !{ ssl_fc } # Redirect HTTP to HTTPS
+    balance roundrobin           # Use round-robin load balancing
+    server web-01 34.229.137.94  # Backend server 1
+    server web-02 100.26.246.233  # Backend server 2
