@@ -15,7 +15,7 @@ if __name__ == '__main__':
     eName = response.json().get('username')
 
     link_t = url + "/todos"
-    response = requests.get(todoUrl)
+    response = requests.get(link_t)
     tasks = response.json()
 
     dictionary = {employeeId: []}
