@@ -12,7 +12,7 @@ def number_of_subscribers(subreddit):
     link = 'https://reddit.com/r/{}/about.json'.format(subreddit)
     head = {'User-Agent': 'Chrome/88.0.4324.188'}
 
-    r = requests.get(link, heads=head)
+    r = requests.get(link, headershead)
 
     if not r:
         return 0
