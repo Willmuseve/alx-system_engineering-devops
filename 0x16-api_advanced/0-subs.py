@@ -7,16 +7,18 @@ import requests
 
 
 def number_of_subscribers(subreddit):
+    """Returns the number of subscribers for an existing
+    subreddit
+    Return:
+        number of subscribers (int)
     """
-    Queries the Reddit API and returns the number of subscribers
-    """
+    link = 'https://reddit.com/r/{}/about.json'.format(subreddit)
+    header = {'User-Agent': 'Chrome/88.0.4324.188'}
 
-    headers = {"User-Agent": "Karma/0.1"}
+    response = requests.get(link, headers=header)
 
-    res = requests.get(f"https://api.reddit.com/r/{subreddit}/about.json",
-                            headers=headers)
-
-    if res.status_code == 200:
-        subreddit_info = res.json()
-        return (subreddit_info['data']['subscribers'])
-    return 0
+    if not response:
+        return 0
+    else:
+        data = response.json().get('data')
+        return data.get('subscribers')
